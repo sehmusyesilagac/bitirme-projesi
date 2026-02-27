@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YeYe Kebap</title>
+
+<style>
+:root{
+--primary:#e30613;
+--bg:#f4f4f4;
+--card:#ffffff;
+--text:#222;
+}
+
+body.dark{
+--bg:#121212;
+--card:#1e1e1e;
+--text:#ffffff;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+}
+
+/* HEADER */
+.header{
+background:var(--primary);
+padding:15px;
+border-radius:0 0 20px 20px;
+position:relative;
+}
+
+.header-container{
+width:90%;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+color:white;
+font-size:24px;
+font-weight:bold;
+}
+
+.auth{
+display:flex;
+gap:10px;
+align-items:center;
+color:white;
+}
+
+.auth button{
+padding:8px 14px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+}
+
+/* HEADER ALTINDA KAYAN YAZI */
+.header-marquee{
+  width:100%;
+  color:white; 
+  padding:0; 
+  overflow:hidden;
+  white-space:nowrap;
+  box-sizing:border-box;
+  font-weight:bold;
+  font-size:14px;
+  border-top:none;
+  position:relative;
+}
+
+.header-marquee span{
+  display:inline-block;
+  padding-left:100%;
+  animation:marquee 30s linear infinite;
+}
+
+@keyframes marquee{
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* SEARCH */
+.search-box{
+width:90%;
+margin:20px auto;
+}
+
+.search-box input{
+width:100%;
+padding:14px;
+border-radius:30px;
+border:none;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* MENU */
+.menu-nav{
+width:90%;
+margin:auto;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.menu-btn{
+padding:10px 15px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+background:var(--card);
+}
+
+/* MAIN */
+.main{
+width:90%;
+margin:20px auto;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.products{flex:2;}
+
+.category-title{
+margin-bottom:10px;
+font-size:22px;
+border-left:5px solid var(--primary);
+padding-left:8px;
+text-transform:capitalize;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+}
+
+.card{
+background:var(--card);
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+cursor:pointer;
+}
+
+.card img{
+width:100%;
+height:125px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+.desc{
+font-size:13px;
+opacity:.7;
+}
+
+.price{
+color:var(--primary);
+font-weight:bold;
+}
+
+/* CART */
+.cart{flex:1;}
+
+.cart-box{
+background:var(--card);
+padding:15px;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+}
+
+.qty button{
+border:none;
+padding:3px 8px;
+cursor:pointer;
+}
+
+.checkout-btn{
+width:100%;
+padding:10px;
+border:none;
+background:#16a34a;
+color:white;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* MODAL */
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.modal-box{
+background:white;
+padding:30px;
+border-radius:16px;
+width:380px;
+box-shadow:0 10px 40px rgba(0,0,0,0.2);
+animation:pop .3s;
+}
+
+.product-modal{
+width:400px;
+text-align:center;
+}
+
+.product-modal img{
+width:100%;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+@keyframes pop{
+from{transform:scale(.8);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+.modal-box h2{
+margin-bottom:15px;
+}
+
+.modal-box input{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.modal-box button{
+width:100%;
+padding:10px;
+border:none;
+background:var(--primary);
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.switch{
+text-align:center;
+margin-top:10px;
+cursor:pointer;
+color:var(--primary);
+}
+
+.footer{
+margin-top:50px;
+background:#222;
+color:white;
+text-align:center;
+padding:20px;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="header-container">
+<div class="logo">YeYe Kebap</div>
+<div class="auth" id="authArea">
+<button onclick="openAuth()">Giriş / Kayıt</button>
+<button onclick="toggleDark()">🌙</button>
+</div>
+</div>
+<!-- KAYAN YAZI -->
+<div class="header-marquee"><span>YeYe Kebap’ta taze ve özenle hazırlanmış lezzetler sizi bekliyor. Adana’dan Urfa’ya, nefis mezelerden tatlılara kadar her bir ürünümüz damak zevkinize hitap ediyor. Sıcacık kebaplarımızla sofralarınıza lezzet katın!</span></div>
+</header>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Menüde ara">
+</div>
+
+<div class="menu-nav">
+<button class="menu-btn" onclick="scrollToCategory('yemek')">Yemekler</button>
+<button class="menu-btn" onclick="scrollToCategory('meze')">Mezeler</button>
+<button class="menu-btn" onclick="scrollToCategory('tatli')">Tatlılar</button>
+<button class="menu-btn" onclick="scrollToCategory('icecek')">İçecekler</button>
+</div>
+
+<div class="main">
+<div class="products" id="productsArea"></div>
+
+<div class="cart">
+<div class="cart-box">
+<h3>Sepetim</h3>
+<div id="cartItems"></div>
+</div>
+
+<div class="cart-box">
+Toplam: <b><span id="totalPrice">0</span> TL</b>
+</div>
+
+<button class="checkout-btn" onclick="startCheckout()">Alışverişi Tamamla</button>
+</div>
+</div>
+
+<div class="modal" id="authModal">
+<div class="modal-box" id="authContent"></div>
+</div>
+
+<div class="modal" id="productModal">
+<div class="modal-box product-modal" id="productDetail"></div>
+</div>
+
+<footer class="footer">© 2026 YeYe Kebap</footer>
+
+<script>
+let users=[];
+let currentUser=null;
+let cart=[];
+
+/* MENU DATA LOKAL RESİMLERLE (aynı klasörde) */
+const menuData = {
+yemek:[
+{name:"Adana Kebap",price:220,img:"kebap.png",desc:"120 gram zırh kıyma ile hazırlanan acılı kebap."},
+{name:"Urfa Kebap",price:210,img:"urfa.png",desc:"Acısız kebap."},
+{name:"İskender",price:250,img:"iskender.png",desc:"Tereyağlı döner."},
+{name:"Tavuk Şiş",price:190,img:"tavuk_sis.png",desc:"Marine tavuk."},
+{name:"Beyti",price:240,img:"beyti.png",desc:"Özel soslu."}
+],
+meze:[
+{name:"Ezme",price:80,img:"ezme.png",desc:"Acılı meze."},
+{name:"Humus",price:90,img:"humus.png",desc:"Nohut ve tahin."},
+{name:"Haydari",price:85,img:"haydari.png",desc:"Yoğurt mezesi."},
+{name:"Acılı Sos",price:70,img:"acili_sos.png",desc:"Özel sos."},
+{name:"Çoban Salata",price:75,img:"coban_salata.png",desc:"Taze sebze."}
+],
+tatli:[
+{name:"Baklava",price:120,img:"baklava.png",desc:"Fıstıklı."},
+{name:"Künefe",price:140,img:"kunefe.png",desc:"Sıcak tatlı."},
+{name:"Sütlaç",price:100,img:"sutlac.png",desc:"Fırın sütlaç."},
+{name:"Revani",price:95,img:"revani.png",desc:"Şerbetli."},
+{name:"Dondurma",price:90,img:"dondurma.png",desc:"Maraş."}
+],
+icecek:[
+{name:"Ayran",price:30,img:"ayran.png",desc:"Soğuk ayran."},
+{name:"Kola",price:40,img:"kola.png",desc:"Soğuk içecek."},
+{name:"Fanta",price:40,img:"fanta.png",desc:"Portakallı."},
+{name:"Şalgam",price:35,img:"salgam.png",desc:"Acılı."},
+{name:"Su",price:15,img:"su.png",desc:"Doğal su."}
+]
+};
+
+/* MENU RENDER */
+function renderMenu(){
+const area=document.getElementById("productsArea");
+area.innerHTML="";
+
+Object.keys(menuData).forEach(cat=>{
+let displayName = cat.charAt(0).toUpperCase() + cat.slice(1); 
+area.innerHTML+=`
+<div id="${cat}">
+<h2 class="category-title">${displayName}</h2>
+<div class="grid">
+${menuData[cat].map(p=>`
+<div class="card" onclick="openProduct('${p.name}')">
+<img src="${p.img}">
+<div class="card-content">
+<h3>${p.name}</h3>
+<p class="desc">${p.desc}</p>
+<p class="price">${p.price} TL</p>
+<button onclick="event.stopPropagation();addToCart('${p.name}',${p.price})">Sepete Ekle</button>
+</div>
+</div>
+`).join("")}
+</div>
+</div>`; 
+});
+}
+
+renderMenu();
+
+/* AUTH SYSTEM */
+function openAuth(type="login"){
+let box=document.getElementById("authContent");
+
+if(type==="login"){
+box.innerHTML=`
+<h2>Giriş Yap</h2>
+<input id="loginUser" placeholder="Kullanıcı adı">
+<input id="loginPass" type="password" placeholder="Şifre">
+<button onclick="login()">Giriş Yap</button>
+<div class="switch" onclick="openAuth('register')">Hesabın yok mu? Kayıt ol</div>
+`;
+}else{
+box.innerHTML=`
+<h2>Kayıt Ol</h2>
+<input id="regName" placeholder="Ad Soyad">
+<input placeholder="Konum">
+<input placeholder="Telefon">
+<input placeholder="E-posta">
+<input id="regUser" placeholder="Kullanıcı adı">
+<input id="regPass" type="password" placeholder="Şifre">
+<button onclick="register()">Kayıt Ol</button>
+<div class="switch" onclick="openAuth('login')">Zaten hesabın var mı? Giriş yap</div>
+`;
+}
+
+document.getElementById("authModal").style.display="flex";
+}
+
+function register(){
+let name=document.getElementById("regName").value;
+let user=document.getElementById("regUser").value;
+let pass=document.getElementById("regPass").value;
+
+users.push({name,user,pass});
+alert("Kayıt başarılı. Şimdi giriş yap.");
+openAuth("login");
+}
+
+function login(){
+let user=document.getElementById("loginUser").value;
+let pass=document.getElementById("loginPass").value;
+
+let found=users.find(u=>u.user===user && u.pass===pass);
+
+if(found){
+currentUser=found;
+document.getElementById("authArea").innerHTML=
+`Hoşgeldin ${found.name}`;
+document.getElementById("authModal").style.display="none";
+}else{
+alert("Bilgiler yanlış");
+}
+}
+
+/* CHECKOUT */
+function startCheckout(){
+if(!currentUser){
+openAuth("login");
+return;
+}
+
+alert("Sipariş oluşturuldu");
+cart=[];
+renderCart();
+}
+
+/* CART */
+function addToCart(name,price){
+let item=cart.find(i=>i.name===name);
+if(item)item.qty++;
+else cart.push({name,price,qty:1});
+renderCart();
+}
+
+function renderCart(){
+let area=document.getElementById("cartItems");
+let total=0;
+area.innerHTML="";
+
+cart.forEach((item,i)=>{
+total+=item.price*item.qty;
+area.innerHTML+=`
+<div class="cart-item">
+${item.name}
+<div class="qty">
+<button onclick="dec(${i})">-</button>
+${item.qty}
+<button onclick="inc(${i})">+</button>
+</div>
+</div>`;
+});
+
+document.getElementById("totalPrice").innerText=total;
+}
+
+function inc(i){cart[i].qty++;renderCart();}
+function dec(i){cart[i].qty--;if(cart[i].qty<=0)cart.splice(i,1);renderCart();}
+
+/* PRODUCT MODAL */
+function openProduct(name){
+let p;
+Object.values(menuData).forEach(cat=>{
+cat.forEach(item=>{
+if(item.name===name)p=item;
+});
+});
+
+document.getElementById("productDetail").innerHTML=`
+<h2>${p.name}</h2>
+<img src="${p.img}">
+<p>${p.desc}</p>
+<h3>${p.price} TL</h3>
+<button onclick="addToCart('${p.name}',${p.price})">Sepete Ekle</button>
+`;
+
+document.getElementById("productModal").style.display="flex";
+}
+
+/* SEARCH */
+document.getElementById("searchInput").addEventListener("input",function(){
+let val=this.value.toLowerCase();
+document.querySelectorAll(".card").forEach(c=>{
+c.style.display=c.innerText.toLowerCase().includes(val)?"block":"none";
+});
+});
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+function scrollToCategory(id){
+document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+window.onclick=function(e){
+if(e.target.classList.contains("modal"))
+e.target.style.display="none";
+}
+</script>
+
+</body>
+</html>
